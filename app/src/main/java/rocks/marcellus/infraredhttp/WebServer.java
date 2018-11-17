@@ -1,5 +1,6 @@
 package rocks.marcellus.infraredhttp;
 
+import android.os.SystemClock;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -50,7 +51,14 @@ public class WebServer extends NanoHTTPD {
             if(commandSpecified)
             {
                 for (ResponseListener listener: _responseListeners)
-                    listener.OnResponse(irCommand);
+                {
+                    String[] commands = irCommand.split("P");
+                    for(String cmd : commands)
+                    {
+                        listener.OnResponse(cmd);
+                        SystemClock.sleep(500);
+                    }
+                }
                 return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_PLAINTEXT, String.format(StatusOk, irCommand));
             }
             else
